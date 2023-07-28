@@ -42,8 +42,8 @@ static void gpio_power_clr(void)
 
 static void led_action_post(void *arg)
 {
-	led_control("ledblink", "blink_led", "0");
-	led_control("led", "blink_led", "on");
+	led_control("ledblink", "power_led", "0");
+	led_control("led", "power_led", "on");
 }
 
 static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
@@ -53,7 +53,7 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[
 	struct udevice *dev;
 	ulong ts;
 
-	led_control("ledblink", "blink_led", "250");
+	led_control("ledblink", "power_led", "50");
 
 	gpio_power_clr();
 
@@ -73,7 +73,7 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[
 		return CMD_RET_SUCCESS;
 	}
 
-	led_control("ledblink", "blink_led", "500");
+	led_control("ledblink", "power_led", "500");
 
 	printf("RESET button is pressed for: %2d second(s)", counter++);
 
@@ -90,13 +90,13 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[
 
 	printf("\n");
 
-	led_control("ledblink", "blink_led", "0");
+	led_control("ledblink", "power_led", "0");
 
 	if (counter == 4) {
-		led_control("led", "system_led", "on");
+		led_control("led", "blink_led", "on");
 		run_command("httpd", 0);
 	} else {
-		led_control("ledblink", "blink_led", "0");
+		led_control("led", "power_led", "on");
 	}
 
 	return CMD_RET_SUCCESS;

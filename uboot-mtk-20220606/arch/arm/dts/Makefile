@@ -1217,6 +1217,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
 	mt7986a-sd-rfb.dtb \
 	mt7986b-sd-rfb.dtb \
 	mt7986-fpga.dtb \
+	mt7986-re-cp-03.dtb \
 	mt7988-a53-fpga.dtb \
 	mt7988-fpga.dtb \
 	mt8183-pumpkin.dtb \

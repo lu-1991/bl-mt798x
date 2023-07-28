@@ -649,6 +649,7 @@ static int httpd_handle_request(struct httpd_instance *inst,
 	}
 
 	led_control("ledblink", "blink_led", "0");
+	led_control("led", "blink_led", "on");
 
 	/* call uri handler */
 	assert((size_t) req->urih->cb > CONFIG_SYS_SDRAM_BASE);

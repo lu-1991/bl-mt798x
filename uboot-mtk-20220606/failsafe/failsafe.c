@@ -17,6 +17,7 @@
 #include <u-boot/md5.h>
 #include <dm/ofnode.h>
 #include <version_string.h>
+#include <linux/delay.h>
 
 #include "fs.h"
 
@@ -51,7 +52,7 @@ const char *get_mtd_layout_label(void);
 
 struct data_part_entry;
 
-#ifdef CONFIG_MT7981_BOOTMENU_EMMC
+#if defined(CONFIG_MT7981_BOOTMENU_EMMC) || defined(CONFIG_MT7986_BOOTMENU_EMMC)
 int write_gpt(void *priv, const struct data_part_entry *dpe,
 		     const void *data, size_t size);
 #endif
@@ -82,7 +83,7 @@ static int write_firmware_failsafe(size_t data_addr, uint32_t data_size)
 	led_control("ledblink", "blink_led", "100");
 
 	switch (fw_type) {
-#ifdef CONFIG_MT7981_BOOTMENU_EMMC
+#if defined(CONFIG_MT7981_BOOTMENU_EMMC) || defined(CONFIG_MT7986_BOOTMENU_EMMC)
 	case FW_TYPE_GPT:
 		r = write_gpt(NULL, NULL, (const void *)data_addr, data_size);
 		break;
@@ -437,7 +438,7 @@ int start_web_failsafe(void)
 	}
 
 	httpd_register_uri_handler(inst, "/", &html_handler, NULL);
-#ifdef CONFIG_MT7981_BOOTMENU_EMMC
+#if defined(CONFIG_MT7981_BOOTMENU_EMMC) || defined(CONFIG_MT7986_BOOTMENU_EMMC)
         httpd_register_uri_handler(inst, "/gpt.html", &html_handler, NULL);
 #endif
 	httpd_register_uri_handler(inst, "/bl2.html", &html_handler, NULL);
@@ -463,11 +464,21 @@ static int do_httpd(struct cmd_tbl *cmdtp, int flag, int argc,
 	int ret;
 
 	printf("\nWeb failsafe UI started\n");
+	led_control("led", "blink_led", "on");
+	led_control("led", "power_led", "off");
 
 	ret = start_web_failsafe();
 
-	if (upgrade_success)
+	if (upgrade_success){
+		led_control("led", "blink_led", "off");
+		led_control("led", "system_led", "on");
+		mdelay(3000);
 		do_reset(NULL, 0, 0, NULL);
+	}else
+	{
+		led_control("led", "blink_led", "off");
+		led_control("led", "power_led", "on");
+	}
 
 	return ret;
 }

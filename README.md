@@ -1,45 +1,29 @@
-# ATF and u-boot for mt798x
-
-## About bl-mt798x
-- https://cmi.hanwckf.top/p/mt798x-uboot-usage
+# ATF and u-boot for JDCloud AX6000 Baili based on mt7986
 
 ![](/u-boot.gif)
 
-## Prepare
-
+# Prepare
 ```
 sudo apt install gcc-aarch64-linux-gnu
+export CROSS_COMPILE=aarch64-linux-gnu-
 ```
 
-## Build
+# Build together using scripts
 ```
-Usage: SOC=[mt7981|mt7986] BOARD=<board name> FIXED_MTDPARTS=[1|0] MULTI_LAYOUT=[0|1] ./build.sh
-eg: SOC=mt7981 BOARD=360t7 ./build.sh
-eg: SOC=mt7981 BOARD=wr30u MULTI_LAYOUT=1 ./build.sh
-eg: SOC=mt7986 BOARD=redmi_ax6000 MULTI_LAYOUT=1 ./build.sh
+SOC=mt7986 BOARD=re-cp-03 FIXED_MTDPARTS=0 MULTI_LAYOUT=0 ./build.sh
 ```
+The target file are bl2.img and fip.bin located in:
+bl-mt798x/atf-20220606-637ba581b/build/mt7986/release
 
----
-
-### xiaomi-wr30u multi-layout uboot firmware compatibility
-|Firmware type|uboot (default)|uboot (immortalwrt-112m)|uboot (qwrt)|
-|:----:|:----:|:----:|:----:|
-|xiaomi stock mtd8/mtd9 (ubi)|√|×|×|
-|immortalwrt stock|√|×|×|
-|X-Wrt stock|√|×|×|
-|immortalwrt 112m|×|√|×|
-|GL.iNet by 237176253|×|√|×|
-|QWRT|×|×|√|
-|**X-Wrt ubootmod**|×|×|×|
-
-### redmi-ax6000 multi-layout uboot firmware compatibility
-|Firmware type|uboot (default)|uboot (immortalwrt-110m)|
-|:----:|:----:|:----:|
-|xiaomi stock mtd8/mtd9 (ubi)|√|×|
-|immortalwrt stock|√|×|
-|OpenWrt stock|√|×|
-|X-Wrt stock|√|×|
-|immortalwrt|×|√|
-|GL.iNet by 237176253|×|√|
-|**OpenWrt ubootmod**|×|×|×|
-|**X-Wrt ubootmod**|×|×|×|
+# Or Build separately
+## Build u-boot
+```
+make mt7986_re-cp-03_defconfig
+make
+```
+## Build ATF
+```
+cp ../uboot-mtk-20220606/u-boot.bin .
+make mt7986_re-cp-03_defconfig
+make
+```
