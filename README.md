@@ -1,4 +1,4 @@
-# ATF and u-boot for JDCloud AX6000 Baili based on mt7986
+# ATF and u-boot for mt798x.
 
 ![](/u-boot.gif)
 
